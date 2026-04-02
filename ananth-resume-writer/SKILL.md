@@ -293,3 +293,73 @@ cp output.docx /mnt/user-data/outputs/
 ## Reference Files
 - See `references/career-facts.md` for extended bullet library if needed
 - See `references/resume-examples.md` for sample job header and bullet patterns
+
+---
+
+## Workday ATS Compatibility
+
+Apply this section whenever the target application portal is Workday, or when the user says "Workday-compatible", "ATS-safe", or "plain format".
+
+### Forbidden Characters (Never use in any resume.js string)
+
+These Unicode characters break Workday and most ATS parsers. They must never appear in generated .docx content:
+
+| Character | Unicode | Name | Safe Replacement |
+|---|---|---|---|
+| `—` | U+2014 | Em dash | `--` |
+| `–` | U+2013 | En dash | `-` |
+| `·` | U+00B7 | Middle dot | `\|` |
+| `"` | U+201C | Left double quote | `"` |
+| `"` | U+201D | Right double quote | `"` |
+| `'` | U+2018 | Left single quote | `'` |
+| `'` | U+2019 | Right single quote / apostrophe | `'` |
+| `•` | U+2022 | Bullet (inline text only) | Use LevelFormat.BULLET via numbering config |
+| `"` | U+0022 | ASCII double quote | **Safe to use** |
+
+**Validation step:** After writing resume.js, always run:
+```python
+with open('resume.js', 'rb') as f:
+    data = f.read()
+bad = [i for i,b in enumerate(data) if b > 127]
+print(f'Non-ASCII bytes: {len(bad)}')
+```
+Zero non-ASCII bytes must remain before generating the .docx.
+
+### Workday Output Mode
+
+When producing a Workday-compatible resume, switch from the standard template to the ATS-safe variant:
+
+**Skills section:** Replace `skillRow()` table format with plain pipe-separated paragraphs:
+```javascript
+function skillRowATS(label, skills) {
+  return new Paragraph({
+    spacing: { before: 30, after: 30 },
+    children: [
+      new TextRun({ text: label + ": ", bold: true, size: 19, color: NAVY, font: "Arial" }),
+      new TextRun({ text: skills, size: 19, color: DARK, font: "Arial" })
+    ]
+  });
+}
+```
+
+**Separator character in skill lists:** Use ` | ` (space-pipe-space) instead of ` · ` (middle dot).
+
+**Tagline:** Use plain ASCII only. Replace `·` with `|`:
+- Standard: `VP Engineering & AI Specialist | Portfolio Management & Fixed Income | Agentic AI | Cloud Platforms | Investment Technology`
+
+**Tables:** Avoid all tables in Workday mode. This includes `skillRow()` tables and any decorative table borders. ATS parsers linearize table content unpredictably.
+
+**Borders and shading:** Safe to keep on Paragraphs (section headers). Avoid on TableCell shading.
+
+**Summary:** Workday mode = ASCII-only strings + no tables + pipe separators + LevelFormat.BULLET for all bullets (never inline bullet characters).
+
+### Pre-flight Checklist (Workday Submissions)
+
+Before generating the final .docx for a Workday application:
+- [ ] All strings in resume.js are ASCII-only (run validation above)
+- [ ] `skillRow()` replaced with `skillRowATS()`
+- [ ] All separators use ` | ` not ` · `
+- [ ] No inline bullet characters (`\u2022` only via numbering config)
+- [ ] No curly quotes — use straight ASCII `"` (U+0022) and `'` (U+0027) only
+- [ ] Em/en dashes replaced with `--` or `-`
+- [ ] Validate .docx passes `validate.py` with zero errors
