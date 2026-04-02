@@ -321,6 +321,17 @@ cp output.docx /mnt/user-data/outputs/
 
 ---
 
+### Workday Mode (Always On)
+This role targets a Workday application portal. Always apply full Workday-safe output:
+- No tables anywhere — includes Core Competencies and job headers
+- `skillRowATS()` plain paragraphs for all competency rows
+- Two plain paragraphs for each job header (title + company on line 1, location + dates on line 2)
+- ASCII-only strings — validate with `python3 -c "..."` before generating
+- Pipe separators ` | ` throughout — never middle dot `·` or em dash `—`
+- `LevelFormat.BULLET` via numbering config for all bullets, including certifications
+- Run ASCII pre-flight check: zero non-ASCII bytes required before node execution
+
+
 ## Workday ATS Compatibility
 
 Apply this section whenever the target application portal is Workday, or when the user says "Workday-compatible", "ATS-safe", or "plain format".
