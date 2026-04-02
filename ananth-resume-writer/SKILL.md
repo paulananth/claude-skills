@@ -149,6 +149,24 @@ Read the job description. Identify:
 - **Key credentials to lead with** from the career facts above
 - **ATS keywords** to embed in summary and skills rows
 
+### Step 2.5: Confirm optional / niche skills to include
+
+Before writing resume.js, ask the user whether to include any of these skills that are role-specific and should **not** appear by default:
+
+| Skill | Include when... |
+|---|---|
+| Aladdin Data Cloud (ADC) / Aladdin Provider Model | JD explicitly mentions BlackRock Aladdin, ADC, or Aladdin Business Analyst |
+| DeFi / Blockchain | Role targets crypto, digital assets, or Web3 |
+| Collibra / OneTrust / CCPA | Role is data governance, privacy, or compliance-heavy |
+| Microsoft Copilot / M365 AI | Role targets Microsoft ecosystem or enterprise productivity AI |
+
+**Default behavior:** Omit ADC entirely unless the JD mentions Aladdin or the user confirms. Do not list "Aladdin Data Cloud" as a Core Competency skill row by default. Mention it only as a supporting bullet inside the Citibank role when it is genuinely relevant.
+
+If role framing is ambiguous, ask the user one question before proceeding:
+> "Should I include your Aladdin Data Cloud / ADC experience for this role? (It is omitted by default unless the JD mentions Aladdin.)"
+
+---
+
 ### Step 3: Write resume.js using the standard template
 
 **Color palette (always use these):**
@@ -239,6 +257,13 @@ cp output.docx /mnt/user-data/outputs/
 - Citi Securities Services = primary anchor (custody, fund accounting, middle office, transfer agency)
 - SSGE Project Rainier = secondary anchor (cross-functional program management)
 - Suppress AI/engineering depth; amplify client-facing delivery
+
+### Aladdin / ADC Roles Only
+- Aladdin Data Cloud is **not a default main skill** — it is niche and applies only to BlackRock-ecosystem roles
+- When the JD explicitly targets Aladdin (Aladdin BA, ADC onboarding, IBOR delivery): use `Paul_Ananth_AladdinBA_FranklinTempleton.docx` as the template reference
+- Tagline for Aladdin roles: `Aladdin Business Analyst | IBOR & ADC Onboarding | Investment Operations`
+- Lead with: Aladdin Provider Model delivery at Citi → ADC advisory at Citisoft → UAT / requirements gathering
+- For all other role types: ADC may appear as a single supporting bullet inside the Citibank role but must not appear in Core Competencies or the tagline
 
 ### AI / Innovation Roles
 - Lead with Citisoft AI work: agentic tools, RAG, MCP, n8n, human-in-the-loop
